@@ -390,6 +390,19 @@
   .cmp-best{color:var(--accent) !important;background:var(--surface-2)}
   .cmp-crown{color:var(--accent);font-size:9px}
   .cmp-foot{font-size:11.5px;color:var(--muted-2);margin-top:12px;line-height:1.5}
+  /* 비교표 하단 인사이트 */
+  .cmp-insight{margin-top:15px;background:linear-gradient(180deg,var(--surface-2),var(--surface));border:1px solid var(--border-soft);border-left:3px solid var(--accent);border-radius:11px;padding:13px 15px}
+  .cmp-insight-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .cmp-ins-chip{font-size:10.5px;font-weight:700;letter-spacing:.4px;color:var(--accent);background:var(--surface-3);border:1px solid var(--accent-dim);padding:2px 10px;border-radius:20px}
+  .cmp-insight-body{font-size:13px;line-height:1.65;color:var(--text)}
+  .cmp-insight-body b{color:var(--accent);font-weight:700}
+  .cmp-ai-btn{margin-left:auto;font-size:11.5px;font-weight:700;color:#04140f;background:var(--accent);border:none;border-radius:8px;padding:5px 12px;cursor:pointer;transition:filter .15s,transform .1s}
+  .cmp-ai-btn:hover{filter:brightness(1.07);transform:translateY(-1px)}
+  .cmp-ai-btn[disabled]{opacity:.55;cursor:default;transform:none}
+  .cmp-ai-status{font-size:11px;color:var(--muted)}
+  .cmp-ai-out{margin-top:11px;padding-top:11px;border-top:1px dashed var(--border);font-size:13px;line-height:1.65;color:var(--text)}
+  .cmp-ai-chip{display:inline-block;font-size:10px;font-weight:700;color:var(--new);background:#12233a;border:1px solid #274b6e;padding:1px 9px;border-radius:20px;margin-right:7px;vertical-align:1px}
+  .cmp-ai-chip.warn{color:var(--warm);background:#2a2213;border-color:#5a4a24}
   @media(max-width:640px){ .cmp-modal{border-radius:12px} .cmp-table th,.cmp-table td{padding:8px 9px} }
   .d-yt:hover{filter:brightness(1.06);transform:translateY(-1px);box-shadow:0 8px 18px -10px var(--accent-dim)}
   /* 임베드 플레이어 */
@@ -489,6 +502,16 @@
       <div class="hint">
         <a href="https://console.cloud.google.com/apis/library/youtube.googleapis.com" target="_blank">Google Cloud Console</a>에서 프로젝트 생성 → YouTube Data API v3 사용 설정 → 사용자 인증 정보에서 <b>API 키</b> 발급.
         키는 파일이 아니라 <b>이 브라우저(localStorage)</b>에만 저장돼요. 보안을 위해 Google Cloud에서 이 키를 <b>YouTube Data API v3 전용</b>으로 제한해 두세요.
+      </div>
+    </div>
+
+    <div class="field">
+      <label for="aiKey">AI 심층 분석 키 <span style="color:var(--muted-2);font-weight:400">· 선택 (Anthropic)</span></label>
+      <input type="password" id="aiKey" placeholder="sk-ant-... (없어도 기본 분석은 작동해요)" autocomplete="off">
+      <div class="hint">
+        비워둬도 <b>벤치마크 비교표의 「레이더 분석」 한 줄 요약은 무료로 항상 작동</b>합니다.
+        이 키를 넣으면 비교표에서 <b>✨ AI 심층</b> 버튼이 켜져, Claude가 제목·포맷·추세까지 읽어 더 깊은 이유를 써줘요.
+        <a href="https://console.anthropic.com/settings/keys" target="_blank">Anthropic 콘솔</a>에서 발급하며, 호출당 소액 비용이 듭니다. 키는 이 브라우저에만 저장돼요.
       </div>
     </div>
 
@@ -816,7 +839,8 @@ const LS = {
   quota:    'ir_quota',        // {date, count} 오늘 검색 횟수
   lastScan: 'ir_lastScan',     // {at, mode, results} 마지막 화면 복원용
   favorites:'ir_favorites',    // {videoId: resultObject} 관심 영상 찜
-  compare:  'ir_compare'       // [채널지표] 벤치마크 비교 목록
+  compare:  'ir_compare',      // [채널지표] 벤치마크 비교 목록
+  aiKey:    'ir_aiKey'         // (선택) Anthropic API 키 — 벤치마크 AI 심층 분석 전용
 };
 const DEFAULT_COLORS = ['#46d6c0','#e0a94a','#e8615c','#5aa9ff','#b98cff','#7ed08a','#ff9d6e'];
 
@@ -974,6 +998,12 @@ apiKeyInput.oninput=()=>{
   // 환영 화면 상태에서 키가 제대로 들어오면 인기영상으로 자동 전환
   if(welcomeShowing && v.startsWith('AIza') && v.length>=35){ welcomeShowing=false; fetchDefaultView(false); }
 };
+
+const aiKeyInput=document.getElementById('aiKey');
+if(aiKeyInput){
+  aiKeyInput.value=localStorage.getItem(LS.aiKey)||'';
+  aiKeyInput.oninput=()=>{ localStorage.setItem(LS.aiKey, aiKeyInput.value.trim()); };
+}
 
 const periodSel=document.getElementById('periodDays');
 const regionSel=document.getElementById('regionCode');
@@ -1782,7 +1812,7 @@ async function openChannelPanel(channelId, channelName, initialVid, initialTitle
       vids=(vd.items||[]).map(v=>({
         id:v.id, title:v.snippet.title, views:+v.statistics?.viewCount||0,
         publishedAt:v.snippet.publishedAt, thumb:(v.snippet.thumbnails?.default||{}).url,
-        comments:+v.statistics?.commentCount||0
+        comments:+v.statistics?.commentCount||0, durSec:durSec(v.contentDetails?.duration||'')
       })).sort((a,b)=>new Date(b.publishedAt)-new Date(a.publishedAt));
     }
 
@@ -1916,7 +1946,8 @@ function renderChannelPanel(d){
     id:d.channelId, title:(d.csn.title||''), avatar:(d.csn.thumbnails?.default||{}).url||'',
     subs:d.subs, totalViews:d.totalViews, vidCount:d.vidCount, publishedAt:d.csn.publishedAt,
     cadence:d.cadence, cadenceRate:d.cadenceRate, cadenceN:d.cadenceN, avgViews:d.avgViews, effVsSub:d.effVsSub,
-    perVideoAvg:d.vidCount?Math.round(d.totalViews/d.vidCount):null
+    perVideoAvg:d.vidCount?Math.round(d.totalViews/d.vidCount):null,
+    recent:(d.vids||[]).slice(0,15).map(v=>({t:v.title, v:v.views, d:v.durSec||0}))
   };
   const cmpBtn=dBody.querySelector('#chCmpBtn');
   if(cmpBtn) cmpBtn.onclick=()=>{
@@ -1938,6 +1969,120 @@ document.getElementById('cmpClose').onclick=()=>cmpBackdrop.classList.remove('sh
 cmpBackdrop.onclick=e=>{ if(e.target===cmpBackdrop) cmpBackdrop.classList.remove('show'); };
 document.getElementById('cmpClear').onclick=()=>{ compareList=[]; save(LS.compare,compareList); updateCompareFab(); renderCompare(); cmpBackdrop.classList.remove('show'); };
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') cmpBackdrop.classList.remove('show'); });
+
+/* ===== 벤치마크 분석: 로컬 자동분석(무료) + Claude API 심층(선택) ===== */
+const AI_MODEL='claude-haiku-4-5-20251001'; // 계정에서 못 쓰는 모델이면 이 문자열만 바꾸세요
+
+// 승자 = 구독자 대비 조회배수(효율) 최고. 동률이면 더 작은 채널이 승. 없으면 최근평균 최고.
+function pickWinner(list){
+  const withEff=list.filter(c=>c.effVsSub!=null);
+  if(withEff.length) return withEff.reduce((a,b)=>(b.effVsSub>a.effVsSub||(b.effVsSub===a.effVsSub&&(b.subs||0)<(a.subs||0)))?b:a);
+  return list.reduce((a,b)=>((b.avgViews||0)>(a.avgViews||0))?b:a);
+}
+// 추세: 최근평균 vs 전체평균
+function trendOf(c){
+  if(!c.avgViews||!c.perVideoAvg) return null;
+  const r=c.avgViews/c.perVideoAvg;
+  if(r>=1.25) return 'up'; if(r<=0.8) return 'down'; return 'flat';
+}
+// 제목 반복 키워드 (한글/영문 n-gram 빈도, 조사 흔들림에 강함)
+function topKeywords(recent){
+  if(!recent||recent.length<2) return [];
+  const N=recent.length, thresh=Math.max(2,Math.ceil(N*0.34));
+  const stop=new Set(['그리고','하는','했다','한다','합니다','으로','에서','이다','까지','이거','저거','정말','진짜','너무','오늘','영상','채널','유튜브','shorts','youtube','feat']);
+  const perTitle=recent.map(r=>{
+    const runs=((r.t||'').toLowerCase().match(/[가-힣]{2,}|[a-z]{2,}/g))||[];
+    const grams=new Set();
+    runs.forEach(run=>{ const L=run.length; for(let len=2;len<=Math.min(6,L);len++){ for(let i=0;i+len<=L;i++) grams.add(run.slice(i,i+len)); } });
+    return grams;
+  });
+  const freq={};
+  perTitle.forEach(set=>set.forEach(g=>{ freq[g]=(freq[g]||0)+1; }));
+  const cands=Object.entries(freq).filter(([g,c])=>c>=thresh&&!stop.has(g)).sort((a,b)=>b[1]-a[1]||b[0].length-a[0].length);
+  const kept=[];
+  cands.forEach(([g,c])=>{
+    if(kept.some(k=>k.g.includes(g)&&k.c>=c)) return;
+    for(let i=kept.length-1;i>=0;i--){ if(g.includes(kept[i].g)&&c>=kept[i].c) kept.splice(i,1); }
+    kept.push({g,c});
+  });
+  return kept.slice(0,2).map(k=>({kw:k.g,cnt:k.c,total:N}));
+}
+// 포맷(쇼츠/롱폼) 구성
+function formatMix(recent){
+  const durs=(recent||[]).map(r=>r.d).filter(d=>d>0);
+  if(!durs.length) return null;
+  const shorts=durs.filter(d=>d<=60).length, longs=durs.length-shorts;
+  const longList=durs.filter(d=>d>60).sort((a,b)=>a-b);
+  const medLongMin=longList.length?Math.round(longList[Math.floor(longList.length/2)]/60):0;
+  let label;
+  if(shorts&&longs) label=`쇼츠·롱폼 혼합(쇼츠 ${shorts}·롱폼 ${longs})`;
+  else if(shorts) label='쇼츠 중심';
+  else label=`롱폼 중심(약 ${medLongMin}분)`;
+  return {label};
+}
+// 로컬 한 줄(들) 요약 — 항상 무료로 작동
+function analyzeCompareLocal(list){
+  if(!list||!list.length) return '';
+  const num=n=>n==null?'—':fmt(n);
+  const w=pickWinner(list);
+  const eff=w.effVsSub!=null?(w.effVsSub>=1?w.effVsSub.toFixed(1):w.effVsSub.toFixed(2))+'×':'—';
+  const nVid=w.cadenceN||(w.recent?w.recent.length:0)||w.vidCount;
+  let s=`구독자 ${num(w.subs)}명 <b>「${esc(w.title)}」</b>이(가) 구독자 대비 조회 효율 최고 — 최근 ${nVid}개로 평균 ${num(w.avgViews)}회, 배수 <b>${eff}</b>. `;
+  const kws=topKeywords(w.recent), fmtx=formatMix(w.recent), bits=[];
+  if(kws.length) bits.push(`제목에 ${kws.map(k=>`'${esc(k.kw)}'`).join('·')} 반복(${kws[0].total}개 중 ${kws[0].cnt}개)`);
+  if(fmtx) bits.push(fmtx.label);
+  if(bits.length) s+=`비결은 ${bits.join(', ')}. `;
+  const others=list.filter(c=>c.id!==w.id);
+  if(others.length){
+    const big=others.reduce((a,b)=>((b.subs||0)>(a.subs||0))?b:a);
+    const tr=trendOf(big);
+    const trtxt=tr==='down'?'최근 평균은 하락세':tr==='up'?'최근 평균은 상승세':'최근 평균은 정체';
+    s+=`반면 구독자 ${num(big.subs)}명 「${esc(big.title)}」은(는) 누적 조회는 크지만 ${trtxt}(${num(big.avgViews)}회).`;
+  }else{
+    const tr=trendOf(w);
+    if(tr==='up') s+='추세도 상승 중.'; else if(tr==='down') s+='다만 최근 평균은 하락 추세.';
+  }
+  return s;
+}
+// Claude API 심층 분석 — Anthropic 키가 있을 때만
+async function callAiInsight(list, box){
+  if(!box) return;
+  const key=(localStorage.getItem(LS.aiKey)||'').trim();
+  const btn=box.querySelector('.cmp-ai-btn'), statusEl=box.querySelector('.cmp-ai-status'), out=box.querySelector('.cmp-ai-out');
+  if(!key){ toast('설정 → AI 심층 분석 키에 Anthropic 키를 넣어주세요'); return; }
+  if(btn) btn.setAttribute('disabled','');
+  if(statusEl) statusEl.textContent='Claude가 분석 중…';
+  const payload=list.map(c=>({
+    채널:c.title, 구독자:c.subs, 총영상:c.vidCount, 총조회:c.totalViews,
+    최근평균조회:c.avgViews, 구독자대비배수:c.effVsSub!=null?+c.effVsSub.toFixed(2):null,
+    영상당평균_전체:c.perVideoAvg,
+    최근제목:(c.recent||[]).slice(0,12).map(r=>r.t),
+    최근영상길이초:(c.recent||[]).slice(0,12).map(r=>r.d)
+  }));
+  const sys='너는 유튜브 성장 분석가다. 아래 2~3개 채널 데이터를 보고, 어느 채널이 구독자 대비 가장 잘 떡상했는지와 그 이유(제목 키워드 패턴, 영상 길이·포맷, 최근 추세)를 한국어 2~3문장으로 아주 구체적으로 써라. 채널명·수치·실제 키워드를 반드시 인용하고, "비교한 결과입니다" 같은 맹탕 표현은 절대 금지. 첫 문장은 승자와 핵심 이유부터.';
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{
+      method:'POST',
+      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+      body:JSON.stringify({ model:AI_MODEL, max_tokens:400, system:sys, messages:[{role:'user',content:'데이터(JSON):\n'+JSON.stringify(payload)}] })
+    });
+    if(!res.ok){ const t=await res.text(); throw new Error('HTTP '+res.status+' '+t.slice(0,180)); }
+    const data=await res.json();
+    const text=(data.content||[]).map(b=>b.type==='text'?b.text:'').join('').trim();
+    if(out){ out.innerHTML=`<span class="cmp-ai-chip">✨ AI 심층</span>${esc(text).replace(/\n/g,'<br>')}`; out.style.display='block'; }
+    if(statusEl) statusEl.textContent='';
+  }catch(err){
+    if(statusEl) statusEl.textContent='';
+    const msg=String(err.message||err); let friendly='AI 분석에 실패했어요.';
+    if(/401|authentication|invalid x-api-key/i.test(msg)) friendly='Anthropic 키가 유효하지 않아요. 설정에서 확인해 주세요.';
+    else if(/429|rate|overloaded|529/i.test(msg)) friendly='요청이 몰렸어요. 잠시 후 다시 시도해 주세요.';
+    else if(/model|not_found|404/i.test(msg)) friendly='이 키로 쓸 수 없는 모델이에요. 코드 상단 AI_MODEL을 계정에서 쓸 수 있는 모델로 바꿔주세요.';
+    else if(/failed to fetch|networkerror/i.test(msg)) friendly='네트워크/CORS 문제로 호출이 막혔어요.';
+    if(out){ out.innerHTML=`<span class="cmp-ai-chip warn">✨ AI</span>${friendly}<br><code style="font-size:10px;color:var(--muted-2)">${esc(msg.slice(0,140))}</code>`; out.style.display='block'; }
+  }finally{
+    if(btn) btn.removeAttribute('disabled');
+  }
+}
 
 function renderCompare(){
   const list=compareList;
@@ -1976,8 +2121,18 @@ function renderCompare(){
     });
     html+='</tr>';
   });
-  html+='</tbody></table></div><div class="cmp-foot">▲ = 항목별 최고값 · 개설일·업로드 주기는 우열이 아니라 참고용이에요</div>';
+  html+='</tbody></table></div>';
+  const hasAiKey=!!(localStorage.getItem(LS.aiKey)||'').trim();
+  const aiBtnHtml=hasAiKey?`<button class="cmp-ai-btn" id="cmpAiBtn" title="Anthropic 키로 제목·포맷·추세까지 읽는 심층 한 문장">✨ AI 심층</button>`:'';
+  html+=`<div class="cmp-insight">
+    <div class="cmp-insight-head"><span class="cmp-ins-chip">레이더 분석</span>${aiBtnHtml}<span class="cmp-ai-status"></span></div>
+    <div class="cmp-insight-body">${analyzeCompareLocal(list)||'채널을 2개 이상 담으면 “왜 이 채널이 이겼는지” 분석이 나와요.'}</div>
+    <div class="cmp-ai-out" style="display:none"></div>
+  </div>`;
+  html+='<div class="cmp-foot">▲ = 항목별 최고값 · 개설일·업로드 주기는 우열이 아니라 참고용 · 업로드 주기·최근 평균은 최근 표본 기준이에요</div>';
   cmpBody.innerHTML=html;
+  const aiBtn=cmpBody.querySelector('#cmpAiBtn');
+  if(aiBtn) aiBtn.onclick=()=>callAiInsight(list, cmpBody.querySelector('.cmp-insight'));
   cmpBody.querySelectorAll('[data-cmprm]').forEach(b=>b.onclick=()=>{
     compareList=compareList.filter(x=>x.id!==b.dataset.cmprm);
     save(LS.compare,compareList); updateCompareFab(); renderCompare();
