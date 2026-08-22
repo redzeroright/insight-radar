@@ -1,5 +1,5 @@
 
-// /api/analyze.js — v3.6 SONNET+OPUS FALLBACK — tries every model until one works
+// /api/analyze.js — v3.6 CLAUDE 4.5 FINAL — 2026 validated models
 export default async function handler(req, res) {
   if (req.method !== 'POST') return res.status(405).json({ error: 'POST only' });
   const apiKey = process.env.ANTHROPIC_API_KEY;
@@ -14,29 +14,28 @@ export default async function handler(req, res) {
 
   const normalized = channels.map((c,i) => {
     const title = c.채널 || c.title || c.채널명 || c.channel || `채널${i+1}`;
-    const subs = c.구독자 || c.subs || c.현재구독자 || 0;
+    const subs = c.구독자 || c.subs || 0;
     const avgViews = c.최근평균조회 || c.avgViews || 0;
     const eff = c.구독자대비배수 || c.effVsSub || null;
     const recentTitles = c.최근제목 || c.recentTitles || [];
-    const totalViews = c.총조회 || c.totalViews || 0;
-    return { title, subs, avgViews, eff, recentTitles: recentTitles.slice(0,12), totalViews };
+    return { title, subs, avgViews, eff, recentTitles: recentTitles.slice(0,12) };
   });
 
-  const prompt = `당신은 유튜브 성장 분석가다. 아래 벤치마크를 보고 1등 채널이 왜 떡상했는지 한국어로 3~4문장으로 분석해라. 제목 반복 키워드, 포맷, 길이 패턴을 근거로 말하고 마지막에 따라하려면 뭘 해야 하는지 팁 한 문장.
+  const prompt = `유튜브 성장 분석가로, 아래 벤치마크에서 1등 채널이 왜 효율 1등인지 한국어로 3~4문장 분석. 제목 반복 키워드/포맷/길이를 근거로, 마지막에 따라할 팁 1문장. 데이터가 부족해도 추론해서 분석해라. JSON 요구 금지.
 
 데이터: ${JSON.stringify(normalized, null, 2)}`;
 
+  // 2026 현재 Anthropic에서 404 안 나는 모델만. 3.5는 전부 404됨 (검색결과 확인)
   const models = [
-    'claude-3-5-sonnet-20241022',
-    'claude-3-5-haiku-20241022',
-    'claude-3-haiku-20240307',
-    'claude-3-sonnet-20240229',
-    'claude-3-opus-20240229',
-    'claude-3-5-sonnet-latest',
-    'claude-3-haiku-latest'
+    'claude-haiku-4-5-20251001',
+    'claude-haiku-4-5',
+    'claude-sonnet-4-5-20250929',
+    'claude-sonnet-4-5',
+    'claude-sonnet-4-20250514',
+    'claude-3-7-sonnet-20250219'
   ];
 
-  let lastErr = '';
+  let last = '';
   for (const model of models) {
     try {
       const r = await fetch('https://api.anthropic.com/v1/messages', {
@@ -54,21 +53,15 @@ export default async function handler(req, res) {
       });
       const data = await r.json();
       if (r.ok) {
-        const text = data.content?.[0]?.text || '분석 실패';
-        return res.status(200).json({ analysis: text, modelUsed: model });
-      } else {
-        lastErr = `model ${model} -> ${JSON.stringify(data)}`;
-        // if not model-not-found, return immediately
-        if (!JSON.stringify(data).toLowerCase().includes('model')) {
-          return res.status(r.status).json({ error: data.error?.message || lastErr });
-        }
-        // otherwise try next model
-        continue;
+        return res.status(200).json({ analysis: data.content?.[0]?.text || '', modelUsed: model });
+      }
+      last = `${model}: ${JSON.stringify(data).slice(0,400)}`;
+      if (!String(data.error?.message||'').toLowerCase().includes('model') && r.status !== 404) {
+        return res.status(r.status).json({ error: data.error?.message || last });
       }
     } catch (e) {
-      lastErr = e.message;
-      continue;
+      last = `${model}: ${e.message}`;
     }
   }
-  return res.status(404).json({ error: `모든 모델 시도 실패. 마지막 오류: ${lastErr}` });
+  return res.status(500).json({ error: `모든 모델 실패: ${last}` });
 }
