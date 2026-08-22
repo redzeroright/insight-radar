@@ -329,42 +329,6 @@
     .wc-sample .s-gauge{flex-direction:row;gap:8px;align-items:center;width:100%;justify-content:flex-start;padding-left:0;margin-top:6px}
   }
 
-  /* ---------- 환영화면 예시 리스트 6줄 (v3.5) ---------- */
-  .wc-list{margin-top:16px;border-top:1px dashed var(--border-soft);padding-top:14px}
-  .wc-list-head{display:flex;align-items:center;gap:8px;font-size:10.5px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;color:var(--muted-2);padding:0 4px 10px}
-  .wc-list-head .lh-title{flex:1}
-  .wc-list-head .lh-views{width:74px;text-align:right}
-  .wc-list-head .lh-mult{width:52px;text-align:right}
-  .wc-row{display:flex;align-items:center;gap:11px;padding:9px 8px;border-radius:9px;transition:background .12s}
-  .wc-row:hover{background:var(--surface-2)}
-  .wc-row .r-rank{flex:0 0 auto;width:19px;height:19px;border-radius:6px;background:var(--surface-2);color:var(--muted);font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:700;display:flex;align-items:center;justify-content:center}
-  .wc-row:nth-child(2) .r-rank{background:linear-gradient(180deg,var(--hot),#c94743);color:#fff}
-  .wc-row:nth-child(3) .r-rank{background:linear-gradient(180deg,var(--warm),#c2872a);color:#20160a}
-  .wc-row:nth-child(4) .r-rank{background:var(--surface-3);color:var(--text)}
-  .wc-row .r-tag{flex:0 0 auto;font-size:9.5px;font-weight:700;padding:2px 7px;border-radius:5px;background:var(--surface-3);color:var(--muted);white-space:nowrap}
-  .wc-row .r-title{flex:1;min-width:0;font-size:12.5px;font-weight:500;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  .wc-row .r-views{flex:0 0 auto;width:74px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:11.5px;color:var(--muted)}
-  .wc-row .r-mult{flex:0 0 auto;width:52px;text-align:right;font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700}
-  .wc-row .r-mult span{font-size:10px;font-weight:500;opacity:.8}
-  .wc-list-note{font-size:10.5px;color:var(--muted-2);text-align:center;margin-top:12px;font-style:italic}
-  @media(max-width:640px){
-    .wc-list-head .lh-views,.wc-row .r-views{display:none}
-    .wc-row .r-tag{display:none}
-  }
-
-  /* ---------- 환영화면 실제 카드 예시 6장 (v3.6) ---------- */
-  .wc-cards{display:flex;flex-direction:column;gap:11px}
-  .wc-cards .card{cursor:default}
-  .wc-cards .card:hover{border-color:var(--border-soft)}       /* 예시라 호버 강조 없음 */
-  .wc-cards .thumb{cursor:default;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#2a3a4d,#1e2937)}
-  :root[data-theme="light"] .wc-cards .thumb{background:linear-gradient(135deg,#dce4ee,#eef1f6)}
-  .wc-cards .thumb::before{content:'▶';color:#4a6079;font-size:26px;opacity:.55}
-  :root[data-theme="light"] .wc-cards .thumb::before{color:#9aa8bd}
-  .wc-cards .ex-badge{position:absolute;top:6px;left:6px;z-index:2;font-size:9px;font-weight:700;letter-spacing:.5px;background:#000000aa;color:#fff;padding:2px 7px;border-radius:5px}
-  :root[data-theme="light"] .wc-cards .ex-badge{background:#1a2634cc}
-  .wc-cards .analyze-btn{cursor:default;pointer-events:none;opacity:.85}
-  .wc-cards-note{font-size:11px;color:var(--muted-2);text-align:center;margin-top:14px;font-style:italic}
-
   /* ---------- 채널 분석 버튼 ---------- */
   .channel-plain{font-size:12.5px;color:var(--muted);margin-top:4px;display:block}
   .analyze-btn{flex:0 0 auto;align-self:center;display:flex;flex-direction:column;align-items:center;gap:4px;background:var(--surface-2);border:1px solid var(--border);border-radius:10px;padding:10px 11px;color:var(--muted);transition:border-color .15s,color .15s,background .15s}
@@ -581,7 +545,7 @@
 <header>
   <div class="brand" id="brandHome" role="button" tabindex="0" title="첫 화면으로 (필터 초기화)">
     <div class="radar-mark"><img src="data:image/png;base64,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" alt="인사이트 레이더 로고"></div>
-    <h1>인사이트(Radar-Fox)<span class="ver" id="appVer">v3.3</span><span class="sub">구독자 2.4만 채널이 평균13만,5.3배 터진 이유를 AI가 한 줄로 알려줍니다</span></h1>
+    <h1>인사이트(Radar-Fox)<span class="ver" id="appVer">v3.5</span><span class="sub">구독자 2.4만 채널이 평균 13만, 5.3배 터진 이유를 AI가 한 줄로 알려줍니다</span></h1>
   </div>
   <div class="quota">
     <div class="quota-meter">
@@ -720,11 +684,6 @@
   <div class="seg viewseg" id="viewSeg">
     <button data-view="list" class="active" title="목록 보기">☰ 목록</button>
     <button data-view="gallery" title="썸네일 갤러리 보기">▦ 갤러리</button>
-  </div>
-  <div class="seg" id="lenSeg" title="영상 길이로 걸러보기 (3분 이하=쇼츠)">
-    <button data-len="all" class="active">전체</button>
-    <button data-len="long">롱폼</button>
-    <button data-len="short">쇼츠</button>
   </div>
   <div class="seg" id="sortSeg">
     <button data-sort="mult" class="active">배수순</button>
@@ -1079,11 +1038,8 @@ const LS = {
 const DEFAULT_COLORS = ['#46d6c0','#e0a94a','#e8615c','#5aa9ff','#b98cff','#7ed08a','#ff9d6e'];
 
 /* ▼▼ 버전 표기는 여기 한 줄만 바꾸면 헤더·푸터 배지가 함께 갱신됩니다 ▼▼ */
-const APP_VER='v3.7';
+const APP_VER='v3.4';
 ['appVer','appVerFoot'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=APP_VER; });
-
-/* ---------- 쇼츠 판정 기준 (2024.10.15부터 유튜브 공식: 180초 이하 = 쇼츠) ---------- */
-const SHORTS_MAX_SEC = 180;
 
 /* ---------- 예상수익 추정용 상수 (2026 시장 기준 대략치) ----------
    롱폼: 주제(니치)별 RPM(1000회당 달러, 유튜브 몫 제외 후 실수령 추정)
@@ -1266,7 +1222,6 @@ minViewsSel.value=settings.minViews; minMultSel.value=settings.minMult; lengthSe
   settings.minMult=+minMultSel.value;
   settings.lengthMode=lengthSel.value;
   save(LS.settings,settings);
-  if(typeof syncLenSeg==='function') syncLenSeg();   // 툴바 토글도 같이 갱신
   if(lastResults.length) render();
 });
 
@@ -1442,7 +1397,7 @@ async function scan(){
       const velocity=views/ageDays;
       const meta=candidates.get(vid);
       const sec=durSec(cd.duration);
-      const isShort=sec>0&&sec<=SHORTS_MAX_SEC;
+      const isShort=sec>0&&sec<=61;
       const cat=categoryOf([...(meta?.topics||[])][0]||'');
       const rpmUsd=isShort? SHORTS_RPM_USD : (RPM_USD[cat]||RPM_USD.general);
       const revUsd=views/1000*rpmUsd;
@@ -1451,7 +1406,7 @@ async function scan(){
         id:vid, title:sn.title, channel:sn.channelTitle, channelId:sn.channelId,
         views, subs, mult, velocity, ageDays, publishedAt:sn.publishedAt,
         thumb:(sn.thumbnails?.medium||sn.thumbnails?.default||{}).url,
-        durSec:sec, isShort:sec>0&&sec<=SHORTS_MAX_SEC,
+        durSec:sec, isShort:sec>0&&sec<=61,
         topics:[...(meta?.topics||[])], kws:[...(meta?.kws||[])],
         topicColor:(topics.find(t=>meta?.topics?.has?.(t.name))||topics.find(t=>t.name===[...(meta?.topics||[])][0])||{}).color||'#46d6c0',
         isNew:!seen.has(vid)
@@ -1521,7 +1476,7 @@ function mapChartVideos(items, tagName, tagColor){
     const views=+st.viewCount||0;
     const ageDays=Math.max(0.5,(now-new Date(sn.publishedAt).getTime())/864e5);
     const sec=durSec(cd.duration);
-    const isShort=sec>0&&sec<=SHORTS_MAX_SEC;
+    const isShort=sec>0&&sec<=61;
     const cat=isShort?'general':'general';
     const rpmUsd=isShort?SHORTS_RPM_USD:(RPM_USD[cat]||RPM_USD.general);
     const revUsd=views/1000*rpmUsd;
@@ -1630,155 +1585,19 @@ function showWelcome(){
       </div>
 
       <div class="wc-preview">
-        <div class="wc-preview-label">이런 결과를 볼 수 있어요 <span style="color:var(--muted-2);font-weight:400;text-transform:none;letter-spacing:0;margin-left:4px">· 실제 스캔 결과 예시</span></div>
-        <div class="wc-cards">
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">1:44</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#46d6c0">반도체소식</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">"중국 반도체 물지 마세요" 전문가가 짚어낸 진짜 현실</span>
-              <span class="channel-plain">경제소식 · 구독 118</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">8.1만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">3.8만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">2<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩168만<small>· $1.2K</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e8615c">686<span>×</span></div>
-              <div class="heatbar"><i style="width:100%;background:#e8615c"></i></div>
-            </div>
+        <div class="wc-preview-label">이런 결과를 볼 수 있어요</div>
+        <div class="wc-sample">
+          <div class="s-thumb"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg></div>
+          <div class="s-body">
+            <span class="s-tag">건강</span>
+            <div class="s-title">50대 이후 무릎 통증, 이 스트레칭 하나로 끝</div>
+            <div class="s-meta">조회 214만 · 구독 4.8만 · 3일 전</div>
           </div>
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">1:58</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#46d6c0">반도체소식</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">반도체 구루 노건상 센터장 등판! "이런 주가 폭락은 처음…"</span>
-              <span class="channel-plain">경제소식 · 구독 118</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">1.6만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">1.4만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">1<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩33만<small>· $239</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e8615c">135<span>×</span></div>
-              <div class="heatbar"><i style="width:100%;background:#e8615c"></i></div>
-            </div>
+          <div class="s-gauge">
+            <div class="g-lab">채널대비 배수</div>
+            <div class="g-mult">44<span>×</span></div>
           </div>
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">0:34</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#e0a94a">정치시사</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">이상호가 은퇴한 이유 #쇼츠</span>
-              <span class="channel-plain">정치일보 · 구독 1,480</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">6.8만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">3.9만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">2<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩1.4만<small>· $10</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e8615c">46<span>×</span></div>
-              <div class="heatbar"><i style="width:100%;background:#e8615c"></i></div>
-            </div>
-          </div>
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">11:35</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#e0a94a">정치시사</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">윤석열은 언제부터 머리가 이렇게 됐나</span>
-              <span class="channel-plain">신문향정치 · 구독 3,870</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">11만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">4.1만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">3<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩62만<small>· $448</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e8615c">29<span>×</span></div>
-              <div class="heatbar"><i style="width:100%;background:#e8615c"></i></div>
-            </div>
-          </div>
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">8:86</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#e0a94a">정치시사</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">"권영세에게 깍듯한 90도 폴더인사" 진짜 보수의 품격 #한동훈</span>
-              <span class="channel-plain">보수의정치 · 구독 7,980</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">17만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">2.6만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">6<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩3.5만<small>· $25</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e8615c">21<span>×</span></div>
-              <div class="heatbar"><i style="width:100%;background:#e8615c"></i></div>
-            </div>
-          </div>
-
-          <div class="card wc-democard">
-            <div class="thumb"><span class="ex-badge">예시</span><span class="dur">0:55</span></div>
-            <div class="card-body">
-              <div class="card-top">
-                <span class="tag" style="background:#e0a94a">정치시사</span>
-                <span class="kw-chip">관련검색어</span>
-              </div>
-              <span class="title">이것이 달라졌다, 김민석에게 반해버린 이상호</span>
-              <span class="channel-plain">정치 일번지 · 구독 1.2만</span>
-              <div class="metrics">
-                <div class="metric"><div class="m-label">조회수</div><div class="m-val">9.6만</div></div>
-                <div class="metric"><div class="m-label">속도 / 일</div><div class="m-val">2.6만<small>회</small></div></div>
-                <div class="metric"><div class="m-label">경과</div><div class="m-val">2<small>일</small></div></div>
-                <div class="metric"><div class="m-label">예상수익 (추정)</div><div class="m-val" style="color:var(--cool)">₩2만<small>· $14</small></div></div>
-              </div>
-            </div>
-            <div class="analyze-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="20" x2="6" y2="13"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="9"/></svg><span>채널분석</span></div>
-            <div class="gauge">
-              <div class="g-label">채널대비 배수</div>
-              <div class="mult" style="color:#e0a94a">8.0<span>×</span></div>
-              <div class="heatbar"><i style="width:80%;background:#e0a94a"></i></div>
-            </div>
-          </div>
-
         </div>
-        <div class="wc-cards-note">↑ 실제 스캔하면 내 주제·키워드에 맞춰 이렇게 배수순으로 정리돼요 (썸네일·숫자는 예시)</div>
       </div>
     </div>`;
   const g=document.getElementById('wcGuideBtn');
@@ -1844,20 +1663,6 @@ document.getElementById('viewSeg').querySelectorAll('button').forEach(b=>{
     b.classList.add('active'); settings.viewMode=b.dataset.view; save(LS.settings,settings); render();
   };
 });
-/* 길이 토글 (전체/롱폼/쇼츠) — settings.lengthMode 공유로 설정 서랍과 양방향 연동 */
-function syncLenSeg(){
-  document.querySelectorAll('#lenSeg button').forEach(x=>{
-    x.classList.toggle('active', x.dataset.len===settings.lengthMode);
-  });
-}
-document.getElementById('lenSeg').querySelectorAll('button').forEach(b=>{
-  b.onclick=()=>{
-    settings.lengthMode=b.dataset.len;
-    if(lengthSel) lengthSel.value=b.dataset.len;   // 설정 서랍 드롭다운도 같이 갱신
-    save(LS.settings,settings); syncLenSeg(); render();
-  };
-});
-syncLenSeg();
 document.getElementById('fNew').onchange=e=>{ filters.onlyNew=e.target.checked; render(); };
 document.getElementById('fFav').onchange=e=>{ filters.onlyFav=e.target.checked; render(); };
 document.getElementById('fSearch').oninput=e=>{ filters.q=e.target.value.trim().toLowerCase(); render(); };
@@ -2462,12 +2267,10 @@ function analyzeCompareLocal(list){
   }
   return s;
 }
-// Claude API 심층 분석 — Anthropic 키가 있을 때만
+// Claude API 심층 분석 — 서버 프록시(v3.5 보안 패치)
 async function callAiInsight(list, box){
   if(!box) return;
-  const key=(localStorage.getItem(LS.aiKey)||'').trim();
   const btn=box.querySelector('.cmp-ai-btn'), statusEl=box.querySelector('.cmp-ai-status'), out=box.querySelector('.cmp-ai-out');
-  if(!key){ toast('설정 → AI 심층 분석 키에 Anthropic 키를 넣어주세요'); return; }
   if(btn) btn.setAttribute('disabled','');
   if(statusEl) statusEl.textContent='Claude가 분석 중…';
   const payload=list.map(c=>({
@@ -2477,16 +2280,15 @@ async function callAiInsight(list, box){
     최근제목:(c.recent||[]).slice(0,12).map(r=>r.t),
     최근영상길이초:(c.recent||[]).slice(0,12).map(r=>r.d)
   }));
-  const sys='너는 유튜브 성장 분석가다. 아래 2~3개 채널 데이터를 보고, 어느 채널이 구독자 대비 가장 잘 떡상했는지와 그 이유(제목 키워드 패턴, 영상 길이·포맷, 최근 추세)를 한국어 2~3문장으로 아주 구체적으로 써라. 채널명·수치·실제 키워드를 반드시 인용하고, "비교한 결과입니다" 같은 맹탕 표현은 절대 금지. 첫 문장은 승자와 핵심 이유부터.';
   try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{
+    const res=await fetch('/api/analyze',{
       method:'POST',
-      headers:{'content-type':'application/json','x-api-key':key,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
-      body:JSON.stringify({ model:AI_MODEL, max_tokens:400, system:sys, messages:[{role:'user',content:'데이터(JSON):\n'+JSON.stringify(payload)}] })
+      headers:{'content-type':'application/json'},
+      body:JSON.stringify({ channels: payload })
     });
     if(!res.ok){ const t=await res.text(); throw new Error('HTTP '+res.status+' '+t.slice(0,180)); }
     const data=await res.json();
-    const text=(data.content||[]).map(b=>b.type==='text'?b.text:'').join('').trim();
+    const text=(data.text || data.analysis || (data.content||[]).map(b=>b.type==='text'?b.text:'').join('')).trim();
     if(out){ out.innerHTML=`<span class="cmp-ai-chip">✨ AI 심층</span>${esc(text).replace(/\n/g,'<br>')}`; out.style.display='block'; }
     if(statusEl) statusEl.textContent='';
   }catch(err){
