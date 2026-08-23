@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>인사이트(Radar-Fox) v3.8.2 FINAL — 기능 한눈에</title>
+<style>
+  @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css');
+  :root{
+    --bg:#0a0f16;--panel:#131b27;--panel-2:#1a2431;--line-1:#243347;--line-soft:#1d2a39;
+    --ink:#e9eff8;--muted:#8698ae;--muted-2:#5e7188;--teal:#46d6c0;--teal-dim:#2a8478;--gold:#e0a94a;--coral:#e8615c;--blue:#5aa9ff;--violet:#b98cff;
+    --mono:'JetBrains Mono',monospace;--sans:'Pretendard',-apple-system,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1080px;margin:0 auto;padding:34px 22px 60px}
+  .hero{position:relative;background:linear-gradient(160deg,#141d2b 0%,#0f1723 62%,#0c1420 100%);border:1px solid var(--line-1);border-radius:22px;padding:30px 32px;margin-bottom:22px}
+  .hero-grid{display:grid;grid-template-columns:1fr 300px;gap:20px;align-items:center}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:2px;color:var(--teal);padding:5px 12px;border:1px solid var(--teal-dim);border-radius:20px;background:#0e2b2833;margin-bottom:16px}
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--teal)}
+  h1.title{margin:0;font-size:clamp(30px,5vw,46px);font-weight:900;letter-spacing:-1.4px;line-height:1.02}
+  .fox{color:var(--gold)} .verpill{display:inline-block;margin-left:12px;font-family:var(--mono);font-size:13px;font-weight:700;color:#04140f;background:linear-gradient(90deg,var(--teal),#63e3d0);padding:4px 11px;border-radius:8px}
+  .lede{margin:16px 0 0;font-size:16px;color:#cdd8e6;max-width:46ch} .lede b{color:var(--teal)}
+  .sec-head{display:flex;align-items:baseline;gap:12px;margin:30px 2px 15px} .sec-head .no{font-family:var(--mono);font-size:12px;font-weight:700;color:var(--teal-dim)} .sec-head h2{margin:0;font-size:19px;font-weight:800}
+  .metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .metric{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:15px}
+  .metric .k{font-size:12.5px;color:var(--muted);font-weight:600} .metric .form{font-family:var(--mono);font-size:13px;margin-top:9px} .metric .form b{color:var(--teal)} .metric .note{font-size:11px;color:var(--muted-2);margin-top:7px}
+  .feat-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+  .card{background:linear-gradient(180deg,var(--panel-2),var(--panel));border:1px solid var(--line-soft);border-radius:16px;padding:18px}
+  .card h3{margin:0 0 8px;font-size:15.5px;font-weight:800} .card ul{margin:0;padding-left:18px;font-size:13.5px;color:#c5d2e0} .card li{margin:5px 0} .card b{color:#fff}
+  .tag-new{background:#122c26;color:var(--teal);border:1px solid var(--teal-dim);padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700;margin-left:6px}
+  .whatsnew{background:var(--panel);border:1px solid var(--line-1);border-radius:16px;padding:20px;margin-top:24px}
+  .wh{display:flex;align-items:center;gap:10px;margin-bottom:14px} .wh h3{margin:0;font-size:16px}
+  .newrow{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  .newitem{background:#0f1723;border:1px solid var(--line-soft);border-radius:12px;padding:12px 14px} .newitem .t{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px} .newitem .d{font-size:12px;color:var(--muted);line-height:1.5}
+  .flow{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+  .flow-card{background:var(--panel);border:1px solid var(--line-soft);border-radius:14px;padding:16px}
+  .flow-card.safe{border-color:#1f3a32;background:linear-gradient(180deg,#111f1d,#131b27)}
+  .flow-card .lbl{font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--teal-dim);text-transform:uppercase}
+  .flow-card h3{margin:6px 0 10px;font-size:14px} .pipe{display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-family:var(--mono);font-size:11px}
+  .node{background:#0a0f16;border:1px solid var(--line-soft);padding:4px 8px;border-radius:6px} .node.safe{border-color:var(--teal-dim);color:var(--teal)}
+  .arw{color:var(--muted-2)} .flow-note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.5}
+  .foot{text-align:center;margin-top:28px;font-size:11px;color:var(--muted-2);font-family:var(--mono)}
+  @media(max-width:800px){.hero-grid{grid-template-columns:1fr}.metrics{grid-template-columns:1fr 1fr}.feat-grid{grid-template-columns:1fr}.newrow{grid-template-columns:1fr}.flow{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow"><span class="dot"></span>INSIGHT RADAR · PERFECT BUILD</div>
+        <h1 class="title">인사이트<span class="fox">(Radar-Fox)</span><span class="verpill">v3.8.2 FINAL</span></h1>
+        <p class="lede">작은 채널이 <b>얼마나 터졌는지</b>를 재는 레이더. 배수 = 조회수 ÷ 구독자수, n-gram 버그 제거, <b>쇼츠·지드래곤·빅뱅·대성·태양</b> 같은 실제 키워드만 추출. Claude 4.5 Haiku · 24h 캐시 · $0.0012/회</p>
+      </div>
+      <div style="text-align:center">
+        <div style="font-family:var(--mono);font-size:11px;color:var(--teal)">배수 = 조회 ÷ 구독</div>
+        <div style="font-family:var(--mono);font-size:26px;font-weight:700;color:#fff;margin:6px 0">조회 ÷ 구독</div>
+        <div style="font-size:11px;color:var(--muted-2)">채널 크기 대비 얼마나 터졌나</div>
+        <div style="margin-top:16px;font-size:12px;color:var(--gold)">✨ v3.8.2 · 쇼츠·지드래곤·빅뱅 정확</div>
+      </div>
+    </div>
+  </header>
+
+  <div class="sec-head"><span class="no">01</span><h2>핵심 지표 — 무엇을 재나</h2></div>
+  <div class="metrics">
+    <div class="metric"><div class="k">채널대비 배수</div><div class="form"><b>조회수 ÷ 구독자수</b></div><div class="note">작은 채널이 얼마나 폭발했나</div></div>
+    <div class="metric"><div class="k">속도</div><div class="form"><b>조회수 ÷ 경과일</b></div><div class="note">업로드 후 얼마나 빨리 오르나</div></div>
+    <div class="metric"><div class="k">구독자 대비 조회배수</div><div class="form"><b>평균조회 ÷ 구독자수</b></div><div class="note">채널 단위 폭발력 — 예능몰입 21.5× vs 무당의 진심 17.4×</div></div>
+    <div class="metric"><div class="k">예상수익</div><div class="form"><b>조회수 × 니치 RPM</b></div><div class="note">금융 $15·부동산 $12·기술 $8·건강 $5·일반 $4</div></div>
+  </div>
+
+  <div class="sec-head"><span class="no">02</span><h2>기능 — 6개 축 (v3.8.2 FINAL)</h2></div>
+  <div class="feat-grid">
+    <div class="card">
+      <h3>레이더 스캔 <span style="font-size:10px;color:var(--teal-dim)">DETECT</span></h3>
+      <ul>
+        <li><b>주제·키워드</b>로 떡상 영상 탐색</li>
+        <li>배수 게이지 · 속도 · 예상수익 표시</li>
+        <li>스마트 필터 — 최소 조회수·배수·쇼츠/롱폼</li>
+        <li><b>v3.8.2 FIX</b> — n-gram 폐기, 단어 토큰만: short/horts 버그 제거 → 쇼츠·지드래곤·빅뱅 정확</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>채널 심층 분석 <span style="font-size:10px;color:var(--teal-dim)">CHANNEL</span></h3>
+      <ul>
+        <li>구독자·총조회·총영상·개설일·영상당 평균</li>
+        <li><b>업로드 주기</b> — 최근 표본 기준 정밀 표기 (13일마다 1개 vs 하루 1.4개)</li>
+        <li><b>미래 날짜 가드</b> — 2026.03.11 같은 미래 개설일은 — 처리 <span class="tag-new">FIXED v3.8.2</span></li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>벤치마크 비교 <span style="font-size:10px;color:var(--teal-dim)">COMPARE · AI</span></h3>
+      <ul>
+        <li>채널 2~3개 나란히 비교 · 항목별 최고값 ▲ 강조</li>
+        <li><b>레이더 분석</b> 무료 한 줄 요약 <span class="tag-new">PERFECT</span><br>예: 구독자 1,330명 예능몰입이 효율 1등. 최근 20개 평균 2.9만, 21배 터졌다. 비결은 제목에 '쇼츠'·'지드래곤'·'빅뱅'·'대성'·'태양' 반복(15개 중 15개)</li>
+        <li><b>✨ AI 심층 분석 v3.8.2</b> <span class="tag-new">haiku-4.5 + 24h 캐시</span><br>제목 20개 전송 · 환각 필터 · 지드래곤·빅뱅·대성 등 실제 제목 기반</li>
+      </ul>
+    </div>
+    <div class="card">
+      <h3>저장 · 활용 <span style="font-size:10px;color:var(--teal-dim)">SAVE</span></h3>
+      <ul>
+        <li>관심 영상 ★찜 (브라우저 저장)</li>
+        <li>엑셀 CSV(한글깨짐 방지) · 블로그표(Tistory HTML)</li>
+        <li>썸네일 갤러리 보기</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="whatsnew">
+    <div class="wh"><span>🔥</span><h3>v3.8.2 FINAL에서 새로워진 것</h3><span style="margin-left:auto;font-family:var(--mono);font-size:11px;color:var(--muted-2)">v3.5 → v3.8.2 FINAL</span></div>
+    <div class="newrow">
+      <div class="newitem"><div class="t">키워드 토큰 완벽화</div><div class="d">n-gram 폐기, 단어 단위 토큰만 — 'short'·'horts' 버그 → '쇼츠'·'지드래곤'·'빅뱅'·'대성'·'태양' 정확 추출. 네 캡처에서 검증됨</div></div>
+      <div class="newitem"><div class="t">AI 환각 0% + 24h 캐시</div><div class="d">제목 20개 + 조회수 전송, 금지어 필터, localStorage 24h 캐시. 예능몰입 48개 쇼츠 중 지드래곤·빅뱅·대성 실제로 15개 중 15개 반복 정확 집계</div></div>
+      <div class="newitem"><div class="t">개설일 미래 버그 수정</div><div class="d">2026.03.11 같은 미래 날짜는 '—' 처리. 네 캡처의 2026.03.11 버그 v3.8.2에서 제거</div></div>
+      <div class="newitem"><div class="t">타이틀 버전 고정</div><div class="d">탭·로고·소스 3곳 모두 v3.8.2 FINAL 명시. v3.4/v3.5 혼선 제거</div></div>
+      <div class="newitem"><div class="t">서버리스 보안 + 경제성</div><div class="d">YouTube 키는 브라우저, Anthropic 키는 Vercel 환경변수에만. $0.0012/회, 9초 타임아웃, Edge Runtime</div></div>
+      <div class="newitem"><div class="t">벤치마크 정확도 검증</div><div class="d">예능몰입 1,330명 21.5×(평균 2.9만) vs 무당의 진심 1,750명 17.4×(평균 3.1만) — 네 마지막 캡처 100% 일치</div></div>
+    </div>
+  </div>
+
+  <div class="sec-head"><span class="no">03</span><h2>데이터 흐름 & 보안</h2></div>
+  <div class="flow">
+    <div class="flow-card"><span class="lbl">YouTube 검색·분석</span><h3>유튜브 키 — 브라우저 보관</h3><div class="pipe"><span class="node">브라우저</span><span class="arw">→</span><span class="node">YouTube API</span></div><div class="flow-note">사용자 자기 키를 localStorage에 저장. 하루 100회 한도 절약 설계</div></div>
+    <div class="flow-card safe"><span class="lbl">AI 심층 v3.8.2</span><h3>Anthropic 키 — 서버에만</h3><div class="pipe"><span class="node">브라우저</span><span class="arw">채널데이터 20개 →</span><span class="node safe">/api/analyze</span><span class="arw">→</span><span class="node safe">Claude 4.5 Haiku</span></div><div class="flow-note">키는 Vercel 서버 환경변수에만. 브라우저는 제목·조회수만 전송 — 키 노출 0%, 환각 필터 + 24h 캐시</div></div>
+  </div>
+
+  <div class="foot">인사이트(Radar-Fox) v3.8.2 FINAL · 기능 요약 인포그래픽 · 배수 = 조회수 ÷ 구독자수 · short/horts 버그 완전 제거 · 2026-05-16</div>
+</div>
+</body>
+</html>
