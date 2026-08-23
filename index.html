@@ -460,7 +460,7 @@
     .quota-meter{min-width:140px}
   }
 
-  /* ================= 기능 소개 인포그래픽 모달 (v3.8.3) ================= */
+  /* ================= 기능 소개 인포그래픽 모달 (v3.4) ================= */
   .about-backdrop{position:fixed;inset:0;background:#05080ce6;opacity:0;pointer-events:none;transition:opacity .2s;z-index:71;overflow-y:auto}
   :root[data-theme="light"] .about-backdrop{background:#1a2634aa}
   .about-backdrop.show{opacity:1;pointer-events:auto}
@@ -539,6 +539,18 @@
     .ab-grid{grid-template-columns:1fr 1fr}
   }
   @media(max-width:420px){ .ab-grid{grid-template-columns:1fr} }
+
+/* === v3.8.3 FINAL POPUP - isolated === */
+#guidePopup{display:none;position:fixed;inset:0;z-index:2147483647;place-items:center;padding:18px;background:rgba(7,12,20,0.85);backdrop-filter:blur(10px)}
+#guidePopup.open{display:grid}
+#guidePopupBox{width:min(1100px,96vw);height:min(88vh,900px);background:#0a0f16;border:1px solid #243347;border-radius:22px;overflow:hidden;display:flex;flex-direction:column;box-shadow:0 24px 80px -20px #000}
+#guidePopupHead{display:flex;align-items:center;justify-content:space-between;padding:14px 18px;background:linear-gradient(160deg,#141d2b,#0f1723);border-bottom:1px solid #243347}
+#guidePopupHead .t{font-size:12px;font-weight:700;color:#46d6c0;font-family:monospace;letter-spacing:1px}
+#guidePopupActions{display:flex;gap:8px}
+.gp-btn{font-size:11px;font-weight:700;padding:7px 12px;border-radius:8px;border:1px solid #2a3849;background:#161e2b;color:#e7edf6;cursor:pointer}
+.gp-btn.primary{background:linear-gradient(90deg,#46d6c0,#63e3d0);color:#04140f}
+#guidePopupIframe{flex:1;border:0;width:100%;height:100%;background:#0a0f16}
+
 </style>
 </head>
 <body>
@@ -573,7 +585,7 @@ try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAt
         </g>
       </svg>
     </button>
-    <button class="icon-btn" id="aboutBtn" onclick="window.open('guide.html','_blank')" title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
+    <button class="icon-btn" id="aboutBtn" title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
     <button class="icon-btn" id="setupToggle">⚙ 설정 · 주제</button>
   </div>
 </header>
@@ -888,7 +900,7 @@ try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAt
   </div>
 </div>
 
-<!-- ===== 기능 소개 인포그래픽 모달 (v3.8.3) ===== -->
+<!-- ===== 기능 소개 인포그래픽 모달 (v3.4) ===== -->
 <div class="about-backdrop" id="aboutBackdrop" style="display:none !important">
   <div class="about-modal">
     <button class="about-close" id="aboutClose" title="닫기 (Esc)">×</button>
@@ -1044,7 +1056,7 @@ const LS = {
 const DEFAULT_COLORS = ['#46d6c0','#e0a94a','#e8615c','#5aa9ff','#b98cff','#7ed08a','#ff9d6e'];
 
 /* ▼▼ 버전 표기는 여기 한 줄만 바꾸면 헤더·푸터 배지가 함께 갱신됩니다 ▼▼ */
-const APP_VER='v3.8.3 FINAL';
+const APP_VER='v3.4';
 ['appVer','appVerFoot'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=APP_VER; });
 
 /* ---------- 예상수익 추정용 상수 (2026 시장 기준 대략치) ----------
@@ -2167,7 +2179,7 @@ function renderChannelPanel(d){
   };
 }
 
-/* ===== 기능 소개 인포그래픽 모달 (v3.8.3) ===== */
+/* ===== 기능 소개 인포그래픽 모달 (v3.4) ===== */
 const aboutBackdrop=document.getElementById('aboutBackdrop'); // v3.8.3 FIX: 기능소개는 guide.html로 이동
 /* DISABLED OLD MODAL
 ;
@@ -2417,5 +2429,40 @@ function renderCompare(){
 updateCompareFab();
 loadInitial();
 </script>
+<div id="guidePopup"><div id="guidePopupBox"><div id="guidePopupHead"><span class="t">INSIGHT RADAR GUIDE v3.8.3 FINAL</span><div id="guidePopupActions"><button class="gp-btn" id="guidePopupFullBtn">🔗 전체 페이지</button><button class="gp-btn primary" id="guidePopupCloseBtn">✕ 닫기 (ESC)</button></div></div><iframe id="guidePopupIframe" src="about:blank"></iframe></div></div>
+
+<script>
+(function(){
+  const btn=document.getElementById('aboutBtn');
+  const modal=document.getElementById('guidePopup');
+  const iframe=document.getElementById('guidePopupIframe');
+  const closeBtn=document.getElementById('guidePopupCloseBtn');
+  const fullBtn=document.getElementById('guidePopupFullBtn');
+  if(!btn||!modal||!iframe){ console.error('guidePopup missing'); return; }
+  function openPopup(e){
+    if(e) e.preventDefault();
+    if(iframe.getAttribute('src')==='about:blank') iframe.src='guide.html';
+    modal.classList.add('open');
+    modal.style.display='grid';
+    document.body.style.overflow='hidden';
+  }
+  function closePopup(){
+    modal.classList.remove('open');
+    modal.style.display='none';
+    document.body.style.overflow='';
+  }
+  // remove any old handlers
+  btn.removeAttribute('onclick');
+  // bind both ways
+  btn.onclick=openPopup;
+  btn.addEventListener('click', openPopup);
+  if(closeBtn){ closeBtn.onclick=closePopup; closeBtn.addEventListener('click', closePopup); }
+  if(fullBtn){ fullBtn.onclick=function(){ window.open('guide.html','_blank'); }; }
+  modal.addEventListener('click', function(e){ if(e.target===modal) closePopup(); });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && modal.classList.contains('open')) closePopup(); });
+  console.log('✅ guidePopup wired - popup only, no new tab');
+})();
+</script>
+
 </body>
 </html>
