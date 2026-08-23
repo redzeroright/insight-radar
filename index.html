@@ -546,24 +546,7 @@
 const APP_VERSION='v3.8.3 FINAL';
 
 const APP_VERSION = 'v3.8.3 FINAL';
-try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}
-// v3.8.3 FINAL POPUP FIX - 100% isolated, does not touch other functions
-(function(){
-  const btn=document.getElementById('aboutBtn');
-  const modal=document.getElementById('aboutBackdrop');
-  const iframe=document.getElementById('guideIframe');
-  const closeBtn=document.getElementById('aboutCloseBtn');
-  const fullBtn=document.getElementById('guideFullBtn');
-  if(!btn||!modal) return;
-  const open=()=>{ if(iframe && iframe.getAttribute('src')==='about:blank') iframe.src='guide.html'; modal.style.display='grid'; document.body.style.overflow='hidden'; };
-  const close=()=>{ modal.style.display='none'; document.body.style.overflow=''; };
-  btn.onclick=open;
-  if(closeBtn) closeBtn.onclick=close;
-  if(fullBtn) fullBtn.onclick=()=>window.open('guide.html','_blank');
-  modal.addEventListener('click', e=>{ if(e.target===modal) close(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.style.display==='grid') close(); });
-})();
-</script>
+try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 
 <header>
   <div class="brand" id="brandHome" role="button" tabindex="0" title="첫 화면으로 (필터 초기화)">
@@ -590,7 +573,7 @@ try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAt
         </g>
       </svg>
     </button>
-    <button class="icon-btn" id="aboutBtn" title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
+    <button class="icon-btn" id="aboutBtn" onclick="window.open('guide.html','_blank')" title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
     <button class="icon-btn" id="setupToggle">⚙ 설정 · 주제</button>
   </div>
 </header>
@@ -2185,17 +2168,14 @@ function renderChannelPanel(d){
 }
 
 /* ===== 기능 소개 인포그래픽 모달 (v3.8.3) ===== */
-const aboutBackdrop=document.getElementById('aboutBackdrop');
-const guideIframe=document.getElementById('guideIframe');
-const aboutCloseBtn=document.getElementById('aboutCloseBtn');
-const guideFullBtn=document.getElementById('guideFullBtn');
+const aboutBackdrop=document.getElementById('aboutBackdrop'); // v3.8.3 FIX: 기능소개는 guide.html로 이동
 /* DISABLED OLD MODAL
 ;
-function openAbout(){ if(guideIframe && guideIframe.getAttribute('src')==='about:blank') guideIframe.src='guide.html'; aboutBackdrop.style.display='grid'; document.body.style.overflow='hidden'; }
-function closeAbout(){ aboutBackdrop.style.display='none'; document.body.style.overflow=''; }
+function openAbout(){ aboutBackdrop.classList.add('show'); aboutBackdrop.scrollTop=0; }
+function closeAbout(){ aboutBackdrop.classList.remove('show'); }
 document.getElementById('aboutBtn').onclick=openAbout;                 // 헤더 버튼
 document.getElementById('aboutClose').onclick=closeAbout;              // X 닫기
-if(aboutBackdrop) aboutBackdrop.addEventListener('click', e=>{ if(e.target===aboutBackdrop) closeAbout(); });
+aboutBackdrop.onclick=e=>{ if(e.target===aboutBackdrop) closeAbout(); }; // 바깥 클릭 닫기
 document.addEventListener('keydown',e=>{ if(e.key==='Escape') closeAbout(); });
 document.getElementById('aboutCtaBtn').onclick=()=>{                   // 하단 CTA → API 가이드로 이어주기
   closeAbout(); guideBackdrop.classList.add('show'); guideBackdrop.scrollTop=0;
@@ -2436,23 +2416,6 @@ function renderCompare(){
 /* ===== 시작: 비교 버튼 상태 + 마지막 화면 복원 (모든 정의 이후 실행) ===== */
 updateCompareFab();
 loadInitial();
-
-// v3.8.3 FINAL POPUP FIX - 100% isolated, does not touch other functions
-(function(){
-  const btn=document.getElementById('aboutBtn');
-  const modal=document.getElementById('aboutBackdrop');
-  const iframe=document.getElementById('guideIframe');
-  const closeBtn=document.getElementById('aboutCloseBtn');
-  const fullBtn=document.getElementById('guideFullBtn');
-  if(!btn||!modal) return;
-  const open=()=>{ if(iframe && iframe.getAttribute('src')==='about:blank') iframe.src='guide.html'; modal.style.display='grid'; document.body.style.overflow='hidden'; };
-  const close=()=>{ modal.style.display='none'; document.body.style.overflow=''; };
-  btn.onclick=open;
-  if(closeBtn) closeBtn.onclick=close;
-  if(fullBtn) fullBtn.onclick=()=>window.open('guide.html','_blank');
-  modal.addEventListener('click', e=>{ if(e.target===modal) close(); });
-  document.addEventListener('keydown', e=>{ if(e.key==='Escape' && modal.style.display==='grid') close(); });
-})();
 </script>
 </body>
 </html>
