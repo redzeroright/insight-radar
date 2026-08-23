@@ -540,7 +540,7 @@
 </head>
 <body>
 <script>
-const APP_VERSION = 'v3.7 SELLABLE'; const MODEL_VERSION = 'claude-haiku-4-5-20251001';
+const APP_VERSION = 'v3.7 SELLABLE (Claude 4.5 Haiku)'; const MODEL_VERSION = 'claude-haiku-4-5-20251001';
 try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAttribute('data-theme','light');}catch(e){}</script>
 
 <header>
@@ -2368,8 +2368,8 @@ function renderCompare(){
     html+='</tr>';
   });
   html+='</tbody></table></div>';
-  const hasAiKey=!!(localStorage.getItem(LS.aiKey)||'').trim();
-  const aiBtnHtml=hasAiKey?`<button class="cmp-ai-btn" id="cmpAiBtn" title="Anthropic 키로 제목·포맷·추세까지 읽는 심층 한 문장">✨ AI 심층</button>`:'';
+  const hasAiKey=true; // v3.7: server-side key, always show
+  const aiBtnHtml=`<button class="cmp-ai-btn" id="cmpAiBtn" title="Claude 4.5 Haiku 서버 분석" style="background:linear-gradient(135deg,#00c6a0,#00a07d);color:#001a14;border:0;padding:6px 12px;border-radius:20px;font-weight:700;cursor:pointer">✨ AI 심층</button>`;
   html+=`<div class="cmp-insight">
     <div class="cmp-insight-head"><span class="cmp-ins-chip">레이더 분석</span>${aiBtnHtml}<span class="cmp-ai-status"></span></div>
     <div class="cmp-insight-body">${analyzeCompareLocal(list)||'채널을 2개 이상 담으면 “왜 이 채널이 이겼는지” 분석이 나와요.'}</div>
