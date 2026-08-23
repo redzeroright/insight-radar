@@ -573,7 +573,7 @@ try{if(localStorage.getItem('ir_theme')==='light')document.documentElement.setAt
         </g>
       </svg>
     </button>
-    <button class="icon-btn" id="aboutBtn" onclick="window.open('guide.html','_blank')" title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
+    <button class="icon-btn" id="aboutBtn"  title="이 앱이 하는 일 한눈에 보기">ℹ️ 기능 소개</button>
     <button class="icon-btn" id="setupToggle">⚙ 설정 · 주제</button>
   </div>
 </header>
@@ -2171,8 +2171,8 @@ function renderChannelPanel(d){
 const aboutBackdrop=document.getElementById('aboutBackdrop'); // v3.8.3 FIX: 기능소개는 guide.html로 이동
 /* DISABLED OLD MODAL
 ;
-function openAbout(){ aboutBackdrop.classList.add('show'); aboutBackdrop.scrollTop=0; }
-function closeAbout(){ aboutBackdrop.classList.remove('show'); }
+function openAbout(){ if(document.getElementById('guideIframe') && document.getElementById('guideIframe').src==='about:blank') document.getElementById('guideIframe').src='guide.html'; document.getElementById('aboutBackdrop').style.display='grid'; document.body.style.overflow='hidden';  aboutBackdrop.classList.add('show'); aboutBackdrop.scrollTop=0; }
+function closeAbout(){ document.getElementById('aboutBackdrop').style.display='none'; document.body.style.overflow='';  aboutBackdrop.classList.remove('show'); }
 document.getElementById('aboutBtn').onclick=openAbout;                 // 헤더 버튼
 document.getElementById('aboutClose').onclick=closeAbout;              // X 닫기
 aboutBackdrop.onclick=e=>{ if(e.target===aboutBackdrop) closeAbout(); }; // 바깥 클릭 닫기
