@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -2270,11 +2271,15 @@ function analyzeCompareLocal(list){
 }
 // Claude API 심층 분석 — 서버 프록시(v3.5 보안 패치)
 
-async function callAiInsight(list, btn){
-  const origText = btn ? btn.innerHTML : '';
+
+async function callAiInsight(list, anchor){
+  const root = anchor?.closest ? anchor.closest('.cmp-insight') : document.querySelector('.cmp-insight');
+  const btn = root ? root.querySelector('#cmpAiBtn') : null;
+  const out = root ? root.querySelector('.cmp-ai-out') : document.getElementById('aiInsightBox');
+  const origText = btn ? btn.innerHTML : '✨ AI 심층';
   if(btn){ btn.disabled=true; btn.innerHTML='⏳ 분석 중...'; }
-  
-  // 1. hash for cache
+  if(out){ out.style.display='block'; out.innerHTML='<div style="padding:10px;color:#888;font-size:12px">Claude 4.5 Haiku 분석 중...</div>'; }
+
   const keyStr = list.map(c=>c.title+'|'+c.subs).join(',');
   let hash = 0; for(let i=0;i<keyStr.length;i++){ hash = ((hash<<5)-hash)+keyStr.charCodeAt(i); hash|=0; }
   const cacheKey = 'fox_ai_v37_'+Math.abs(hash);
@@ -2283,12 +2288,13 @@ async function callAiInsight(list, btn){
     try{
       const cached = JSON.parse(cachedRaw);
       if(Date.now() - cached.ts < 24*60*60*1000){
-        renderAiBox(cached.analysis, true, btn, origText);
+        renderAiBox(cached.analysis, true, btn, origText, out);
         return;
       }
     }catch{}
   }
 
+  window._lastBenchList = list;
   const payload = list.map(c=>({
     title:c.title, subs:c.subs, avgViews:c.avgViews, effVsSub:c.effVsSub!=null?+c.effVsSub.toFixed(2):null,
     recentTitles:(c.recent||[]).slice(0,12).map(r=>r.t)
@@ -2303,25 +2309,26 @@ async function callAiInsight(list, btn){
     const data = await res.json();
     if(!res.ok) throw new Error(data.error || '분석 실패');
     localStorage.setItem(cacheKey, JSON.stringify({ analysis: data.analysis, ts: Date.now() }));
-    renderAiBox(data.analysis, false, btn, origText);
+    renderAiBox(data.analysis, false, btn, origText, out);
   }catch(e){
     if(btn){ btn.disabled=false; btn.innerHTML=origText; }
-    const box = document.getElementById('aiInsightBox');
-    if(box){
-      box.innerHTML = `<div style="padding:12px;background:#1a1a1a;border:1px solid #ff4444;border-radius:8px;color:#ff8888;font-size:13px">⚠️ ${e.message}<br><button onclick="callAiInsight(window._lastBenchList, document.getElementById('aiBtn'))" style="margin-top:8px;padding:6px 10px;background:#333;color:#fff;border:0;border-radius:6px;cursor:pointer">다시 시도</button></div>`;
+    if(out){
+      out.innerHTML = `<div style="padding:12px;background:#1a1a1a;border:1px solid #ff4444;border-radius:8px;color:#ff8888;font-size:13px">⚠️ ${e.message}<br><button onclick="callAiInsight(window._lastBenchList, document.querySelector('.cmp-insight'))" style="margin-top:8px;padding:6px 10px;background:#333;color:#fff;border:0;border-radius:6px;cursor:pointer">다시 시도</button></div>`;
     }
   }
 }
 
-function renderAiBox(analysis, isCached, btn, origText){
-  if(btn){ btn.disabled=false; btn.innerHTML=origText; }
-  const box = document.getElementById('aiInsightBox');
-  if(!box) return;
+function renderAiBox(analysis, isCached, btn, origText, outEl){
+  if(btn){ btn.disabled=false; btn.innerHTML=origText || '✨ AI 심층'; }
+  const out = outEl || document.querySelector('.cmp-ai-out') || document.getElementById('aiInsightBox');
+  if(!out) return;
   const cacheLabel = isCached ? '<span style="font-size:11px;background:#222;color:#888;padding:2px 6px;border-radius:4px;margin-left:6px">캐시 24h</span>' : '<span style="font-size:11px;background:#0a2;color:#8f8;padding:2px 6px;border-radius:4px;margin-left:6px">haiku-4.5</span>';
-  box.innerHTML = `<div style="padding:14px;background:linear-gradient(135deg,#111,#1a1a1a);border:1px solid #333;border-radius:10px;line-height:1.6;font-size:13px;color:#ddd;white-space:pre-wrap">✨ AI 심층 ${cacheLabel}
+  out.style.display='block';
+  out.innerHTML = `<div style="padding:14px;background:linear-gradient(135deg,#111,#1a1a1a);border:1px solid #333;border-radius:10px;line-height:1.6;font-size:13px;color:#ddd;white-space:pre-wrap"><b>✨ AI 심층</b> ${cacheLabel}
 
 ${analysis}</div>`;
 }
+
 
 
 function renderCompare(){
@@ -2372,7 +2379,7 @@ function renderCompare(){
   html+='<div class="cmp-foot">▲ = 항목별 최고값 · 개설일·업로드 주기는 우열이 아니라 참고용 · 업로드 주기·최근 평균은 최근 표본 기준이에요</div>';
   cmpBody.innerHTML=html;
   const aiBtn=cmpBody.querySelector('#cmpAiBtn');
-  if(aiBtn) aiBtn.onclick=()=>callAiInsight(list, cmpBody.querySelector('.cmp-insight'));
+  if(aiBtn) aiBtn.onclick=()=>callAiInsight(list, cmpBody.querySelector('.cmp-insight')); window._lastBenchList=list;
   cmpBody.querySelectorAll('[data-cmprm]').forEach(b=>b.onclick=()=>{
     compareList=compareList.filter(x=>x.id!==b.dataset.cmprm);
     save(LS.compare,compareList); updateCompareFab(); renderCompare();
