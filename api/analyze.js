@@ -1,6 +1,6 @@
 
-// /api/analyze.js — v3.8.1 FINAL — Claude 4.5 Haiku Fixed + Anti-Hallucination + Cost Optimized
-// Title: Insight Radar v3.8.1 FINAL - Claude 4.5 Haiku | 2026-05-16
+// /api/analyze.js — v3.8.2 FINAL — Claude 4.5 Haiku Fixed + Anti-Hallucination + Cost Optimized
+// Title: Insight Radar v3.8.2 FINAL - Claude 4.5 Haiku | 2026-05-16
 export const config = { runtime: 'edge' };
 const MODEL = 'claude-haiku-4-5-20251001';
 const MAX_TOKENS = 700;
@@ -33,7 +33,7 @@ export default async function handler(req) {
   }));
 
   // Anti-hallucination prompt
-  const prompt = `You are YouTube analyst for Insight Radar v3.8.1 FINAL.
+  const prompt = `You are YouTube analyst for Insight Radar v3.8.2 FINAL.
 
 STRICT RULES:
 - Analyze ONLY inside ### DATA ###. Never invent celebrity names, events, topics not in titles.
@@ -76,7 +76,7 @@ ${JSON.stringify(normalized, null, 2)}
         analysis = analysis.replace(re,'');
       });
     }
-    return new Response(JSON.stringify({analysis, model:'v3.8.1 FINAL / haiku-4.5', version:'v3.8.1 FINAL'}),{status:200,headers:{'content-type':'application/json','Cache-Control':'no-store'}});
+    return new Response(JSON.stringify({analysis, model:'v3.8.2 FINAL / haiku-4.5', version:'v3.8.2 FINAL'}),{status:200,headers:{'content-type':'application/json','Cache-Control':'no-store'}});
   }catch(e){
     clearTimeout(to);
     console.error('fetch err', e.message);
